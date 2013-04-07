@@ -31,16 +31,22 @@ public class ClientHandler {
 		if(splittedRequestLine.length != 3) {
 			//problème sur la request, à gérer
 		}	
+		if(splittedRequestLine[0] != "GET" || splittedRequestLine[0] != "get") {
+			//error
+		}
 		request.setMethod(splittedRequestLine[0]);
 		
-		if (splittedRequestLine[1].equals("")) 
-			request.setUrl("index.html");
+		if (splittedRequestLine[1].equals("") || splittedRequestLine[1].equals("/")) 
+			request.setUrl("/index.html");
 		else if (splittedRequestLine[1].contains("..")) {
 			//error
 		}
 		else 
 			request.setUrl(splittedRequestLine[1]);
 		
+		if(splittedRequestLine[2] != "HTTP/1.0") {
+			//error
+		}
 		request.setHttpVersion(splittedRequestLine[2]);
 		
 		//On ignore le reste pour le moment

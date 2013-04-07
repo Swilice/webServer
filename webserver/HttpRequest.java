@@ -7,8 +7,8 @@ public class HttpRequest {
 	private String method;
 	private String url;
 	private String httpVersion;
-	private Map<String, String> headers;	// Non utilisé dans cet example simple
-	private String body;					// De même
+	private Map<String, String> headers;	// Unused in this simple example
+	private String body;					// Same here
 	
 	/* Accessors */
 	public String getMethod() {

@@ -5,6 +5,16 @@ import java.net.Socket;
 
 public abstract class RequestHandler {
 	
-	protected abstract void handle(Socket socket) throws IOException;
+	protected String dataFolder;
+	
+	public abstract HttpResponse handle(HttpRequest request, Socket clientConnection) throws IOException;
+	
+	/* Accessors */
+	public String getDataFolder() {
+		return dataFolder;
+	}
 
+	public void setDataFolder(String dataFolder) {
+		this.dataFolder = dataFolder;
+	}
 }

@@ -23,41 +23,50 @@ public class HttpServer implements Runnable {
 	}
 	
 	public void start() {
-		if(isRunning) {
+		if(!isRunning) {
+			try {
+				serverConnection = new ServerSocket(port);
+			} catch (IOException ioe) {
+				//error
+			}
+			isRunning = true;
+		}
+		else {
 			//error
 		}
-		try {
-			serverConnection = new ServerSocket(port);
-		} catch (IOException ioe) {
-			//error
-		}
-		
-		isRunning = true;
 	}
 	
 	public void run() {
 		if(serverConnection == null) {
 			//error
 		}
-		try {
-			// DO NOT set runningServer=true here - that's the responsability of start()
-			
-			while (isRunning) {
-				Socket clientConnection = serverConnection.accept();
-				HttpRequest request = clientHandler.handle(clientConnection);
-				if (request == null) {
-					//error
+		else {
+			try {
+				while (isRunning) {
+					Socket clientConnection = serverConnection.accept();
+					HttpRequest request = clientHandler.handle(clientConnection);
+					if (request == null) {
+						//error
+					}
+					RequestHandler requestHandler = facto.defineHandler(request);
+					HttpResponse response = requestHandler.handle(request, clientConnection);
+					// client handler send response ?
 				}
-				RequestHandler requestHandler = facto.defineHandler(request);
-				requestHandler.handle(request, clientConnection);
+			} catch (IOException ioe) {
+				//error
 			}
-		} catch (IOException ioe) {
-			//error
 		}
 	}
 	
 	public void stop() {
-		isRunning = false;
+		if(isRunning) {
+			isRunning = false;
+			try {
+				serverConnection.close();
+			} catch (IOException ioe) {
+				//error
+			}
+		}
 	}
 
 }

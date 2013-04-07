@@ -4,23 +4,26 @@ import java.net.Socket;
 
 public class RequestHandlerFactory {
 	
-	String dataFolder;
+	private String dataFolder;
+	private RequestHandler handler;
 	
 	public RequestHandlerFactory(String dataFolder) {
 		this.dataFolder = dataFolder;
+		this.handler = null;
 	}
 	
 	public RequestHandler defineHandler(HttpRequest request) {
-		RequestHandler handler = null;
 		
-		String fileType = extensionFind(request);
+		String fileType = request.getUrl();
 		if (fileType != null) {
-			if (fileType == "jpeg" || fileType == "jpg") {
-				handler = new ImageRequestHandler(clientConnection, dataFolder);
+			if (fileType.endsWith("jpeg") || fileType.endsWith("jpg")) {
+				handler = new ImageRequestHandler(dataFolder);
 			}
-			else if (fileType == "html") {
-				handler = new HttpRequestHandler(clientConnection, dataFolder);
+			else if (fileType.endsWith("html")) {
+				handler = new HttpRequestHandler(dataFolder);
 			}
+			else 
+				handler = null;
 		}
 		else {
 			//error
@@ -28,22 +31,4 @@ public class RequestHandlerFactory {
 		
 		return handler;
 	}
-	
-	private String extensionFind(HttpRequest request) {
-		String extension = null;
-		String splittedUrl[] = request.getUrl().split("/");
-		String fileRequested = splittedUrl[splittedUrl.length-1];
-		if(fileRequested.contains(".")) {
-			extension = fileRequested.split(".")[1];
-		}
-		return extension;
-	}
-	/*
-	public RequestHandler newHttpRequestHandler(Socket clientConnection) {
-		return new HttpRequestHandler(clientConnection, dataFolder);
-	}
-	
-	public RequestHandler newImageRequestHandler(Socket clientConnection) {
-		return new ImageRequestHandler(clientConnection, dataFolder);
-	} */
 }
