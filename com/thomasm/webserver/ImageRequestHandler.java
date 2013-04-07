@@ -27,11 +27,11 @@ public class ImageRequestHandler extends RequestHandler {
 			response = new HttpResponse(clientConnection);
 			
 			// Simple example --> everything is static
-			response.setHttpVersion("HTTP/1.0");	
+			response.setHttpVersion("HTTP/1.1");	
 			response.setStatusCode("200");
 			response.setStatusReason("OK");
 			
-			response.addHeader("Server", "TMwebServer/0.1");
+			response.addHeader("Server", "ThomasMwebServer/1.0");
 			response.addHeader("Content-Type", "image/jpeg");
 			response.addHeader("Content-Length", String.valueOf(file.length()));
 			response.addHeader("Connection", "Close");

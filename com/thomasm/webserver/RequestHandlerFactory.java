@@ -9,7 +9,6 @@ public class RequestHandlerFactory {
 	
 	public RequestHandlerFactory(String dataFolder) {
 		this.dataFolder = dataFolder;
-		this.handler = null;
 	}
 	
 	public RequestHandler getHandler(HttpRequest request) {

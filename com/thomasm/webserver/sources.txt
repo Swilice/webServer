@@ -1,0 +1,8 @@
+Sources :
+http://www.eric-pidoux.com/tutoriaux/tutoriel-serveur-http-en-java
+http://www.siteduzero.com/informatique/tutoriels/introduction-aux-sockets-1/qu-est-ce-qu-un-socket (et la suite du tutoriel)
+http://www.ibm.com/developerworks/systems/library/es-nweb/index.html
+http://stackoverflow.com/questions/10788125/a-simple-http-server-with-java-socket#
+http://blog1.vorburger.ch/2006/06/simple-http-server-in-java.html
+http://sardes.inrialpes.fr/~krakowia/Enseignement/M1/Flips/6-Sock-RPC-RAR-M1.pdf
+http://arxiv.org/ftp/arxiv/papers/1003/1003.1497.pdf

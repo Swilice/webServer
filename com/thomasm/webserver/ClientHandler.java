@@ -46,7 +46,7 @@ public class ClientHandler {
 		else 
 			request.setUrl(splittedRequestLine[1]);
 		
-		if(splittedRequestLine[2] != "HTTP/1.0") {
+		if(splittedRequestLine[2] != "HTTP/1.1") {
 			Logger.getInstance().printLogToConsole("501: Http version not implemented");
 		}
 		request.setHttpVersion(splittedRequestLine[2]);
