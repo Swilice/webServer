@@ -29,7 +29,6 @@ public class HttpServer implements Runnable {
 		if(!isRunning) {
 			try {
 				serverConnection = new ServerSocket(port);
-				serverConnection.setSoTimeout(timeout);
 			} catch (IOException ioe) {
 				Logger.getInstance().printLogToConsole("Creation of serverSocket on port : " + port + " failed");
 			}
