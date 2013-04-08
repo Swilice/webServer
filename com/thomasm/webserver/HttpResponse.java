@@ -8,8 +8,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.thomasm.logger.Logger;
-
 public class HttpResponse {
 	private String httpVersion;
 	private String statusCode;
@@ -18,14 +16,14 @@ public class HttpResponse {
 	private OutputStream body;
 	private boolean bodyUseStarted;
 	
-	public HttpResponse(Socket clientConnection) {
+	public HttpResponse(Socket clientConnection) throws IOException{
 		bodyUseStarted = false;
 		headers = new HashMap<String, String>();
-		try {
-			body = new BufferedOutputStream(clientConnection.getOutputStream());
-		} catch(IOException ioe) {
-			Logger.getInstance().printLogToConsole("500: Response outputStream instantiation failed");
-		}
+		body = new BufferedOutputStream(clientConnection.getOutputStream());
+		
+		this.setHttpVersion("HTTP/1.1");
+		this.addHeader("Server", "ThomasMwebServer/1.0");
+		this.addHeader("Connection", "Close");
 	}
 	
 	/* Function copied from external source */

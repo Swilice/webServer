@@ -2,25 +2,26 @@ package com.thomasm.webserver;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.thomasm.logger.Logger;
 
 public class HttpServer implements Runnable {
+	private final int timeout = 1000;
+	
 	private int port;
-	private int nbMaxThread;
-	private RequestHandlerFactory facto;
-	private ClientHandler clientHandler;
+	private RequestRouter router;
 	
-	boolean isRunning;
-	ServerSocket serverConnection;
+	private boolean isRunning;
+	private ServerSocket serverConnection;
+	private final ExecutorService pool;
 	
-	public HttpServer(int port, int nbMaxThread, RequestHandlerFactory facto) {
+	public HttpServer(int port, int nbMaxThread, RequestRouter router) {
 		this.port = port;
-		this.nbMaxThread = nbMaxThread;
-		this.facto = facto;
+		this.router = router;
 		
-		clientHandler = new ClientHandler();
+		pool = Executors.newFixedThreadPool(nbMaxThread);
 		isRunning = false;
 	}
 	
@@ -28,33 +29,29 @@ public class HttpServer implements Runnable {
 		if(!isRunning) {
 			try {
 				serverConnection = new ServerSocket(port);
+				serverConnection.setSoTimeout(timeout);
 			} catch (IOException ioe) {
-				Logger.getInstance().printLogToConsole("500: Creation of serverSocket on port : " + port + " failed");
+				Logger.getInstance().printLogToConsole("Creation of serverSocket on port : " + port + " failed");
 			}
 			isRunning = true;
 		}
 		else {
-			Logger.getInstance().printLogToConsole("500: Server is already running");
+			Logger.getInstance().printLogToConsole("Server is already running");
 		}
 	}
 	
 	public void run() {
 		if(serverConnection == null) {
-			Logger.getInstance().printLogToConsole("500: ServerSocket hasn't been initialized before running");
+			Logger.getInstance().printLogToConsole("ServerSocket hasn't been initialized before running");
 		}
 		else {
 			try {
 				while (isRunning) {
-					Socket clientConnection = serverConnection.accept();
-					HttpRequest request = clientHandler.handle(clientConnection);
-					if (request == null) {
-						Logger.getInstance().printLogToConsole("500: Request creation failed");
-					}
-					RequestHandler requestHandler = facto.getHandler(request);
-					HttpResponse response = requestHandler.handle(request, clientConnection);
+					pool.execute(new ClientHandler(serverConnection.accept(), router));
 				}
 			} catch (IOException ioe) {
-				Logger.getInstance().printLogToConsole("500: IO error when opening client socket");
+				pool.shutdown();
+				Logger.getInstance().printLogToConsole("IO error when opening client socket");
 			}
 		}
 	}
@@ -65,7 +62,7 @@ public class HttpServer implements Runnable {
 			try {
 				serverConnection.close();
 			} catch (IOException ioe) {
-				Logger.getInstance().printLogToConsole("500: serverSocket closure failed");
+				Logger.getInstance().printLogToConsole("ServerSocket closure failed");
 			}
 		}
 	}
